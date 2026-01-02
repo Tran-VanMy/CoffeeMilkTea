@@ -1,0 +1,48 @@
+@charset "UTF-8";
+
+/* /assets/css/admin-shell-ui.css */
+
+.admin-nav{
+  background: radial-gradient(1200px 380px at 10% 0%, rgba(255,255,255,.18), transparent 60%),
+              linear-gradient(135deg, #0f172a, #2563eb);
+}
+
+.admin-brand__logo{
+  width: 38px;
+  height: 38px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.22);
+}
+
+.admin-link{
+  border-radius: 12px;
+  padding: .55rem .75rem !important;
+  color: rgba(255,255,255,.86) !important;
+}
+.admin-link:hover{
+  background: rgba(255,255,255,.10);
+}
+.admin-link.active{
+  background: rgba(255,255,255,.16);
+  border: 1px solid rgba(255,255,255,.20);
+  color: #fff !important;
+}
+
+.admin-userbtn{
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,.08);
+}
+
+.admin-logout{
+  border-radius: 12px;
+}
+
+@media (max-width: 991.98px){
+  .admin-link{
+    padding: .6rem .8rem !important;
+  }
+}

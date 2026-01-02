@@ -1,0 +1,47 @@
+@charset "UTF-8";
+
+/* /assets/css/customer-footer-ui.css */
+
+.cs-footer{
+  background: radial-gradient(1100px 420px at 10% 0%, rgba(255,255,255,.14), transparent 60%),
+              linear-gradient(135deg, #0f172a, #111827);
+  color: #fff;
+  border-top: 1px solid rgba(255,255,255,.10);
+}
+
+.cs-footer__logo{
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.22);
+  font-size: 18px;
+}
+
+.cs-footer__link{
+  color: rgba(255,255,255,.80);
+  text-decoration: none;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  transition: .15s ease;
+}
+.cs-footer__link:hover{
+  color: #fff;
+  background: rgba(255,255,255,.08);
+  border-color: rgba(255,255,255,.18);
+}
+
+.cs-footer__badge{
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.cs-footer__hr{
+  border-color: rgba(255,255,255,.12);
+  opacity: 1;
+}

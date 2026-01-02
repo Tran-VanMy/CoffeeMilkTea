@@ -1,0 +1,119 @@
+@charset "UTF-8";
+
+/* /assets/css/admin-order-detail-ui.css */
+
+.aod-hero{
+  border-radius: 18px;
+  padding: 16px 16px;
+  background: radial-gradient(1100px 380px at 10% 0%, rgba(255,255,255,.22), transparent 60%),
+              linear-gradient(135deg, #0f172a, #2563eb);
+  color: #fff;
+  box-shadow: 0 10px 28px rgba(0,0,0,.12);
+}
+.aod-hero__icon{
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.22);
+  font-size: 18px;
+}
+
+.aod-card{
+  border-radius: 18px;
+}
+
+.aod-kv{
+  display: grid;
+  gap: 10px;
+}
+.aod-kv__row{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(0,0,0,.02);
+  border: 1px solid rgba(0,0,0,.06);
+}
+.aod-kv__k{
+  color: rgba(0,0,0,.66);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.aod-kv__v{
+  text-align: right;
+  max-width: 70%;
+}
+
+.aod-sum{
+  padding: 8px 10px;
+  border-radius: 14px;
+  background: rgba(0,0,0,.02);
+  border: 1px solid rgba(0,0,0,.06);
+}
+
+/* Table lines: thẳng & đều */
+.aod-table{
+  border-collapse: collapse !important;
+}
+.aod-table > :not(caption) > * > *{
+  border-bottom: 1px solid rgba(0,0,0,.08) !important;
+}
+.aod-table thead th{
+  color: rgba(0,0,0,.72);
+  font-weight: 800;
+  background: #fff;
+}
+.aod-table tbody tr:last-child > *{
+  border-bottom: 0 !important;
+}
+
+/* status badge */
+.aod-status{
+  border-radius: 999px;
+  padding: .45rem .65rem;
+  font-weight: 800;
+  border: 1px solid rgba(0,0,0,.10);
+}
+.aod-status-CHO_XAC_NHAN{
+  background: rgba(245, 158, 11, .15);
+  color: #92400e;
+  border-color: rgba(245, 158, 11, .25);
+}
+.aod-status-DANG_PHA{
+  background: rgba(59, 130, 246, .14);
+  color: #1e40af;
+  border-color: rgba(59, 130, 246, .25);
+}
+.aod-status-DANG_GIAO{
+  background: rgba(99, 102, 241, .14);
+  color: #3730a3;
+  border-color: rgba(99, 102, 241, .25);
+}
+.aod-status-HOAN_TAT{
+  background: rgba(34, 197, 94, .14);
+  color: #166534;
+  border-color: rgba(34, 197, 94, .25);
+}
+.aod-status-HUY{
+  background: rgba(239, 68, 68, .12);
+  color: #991b1b;
+  border-color: rgba(239, 68, 68, .22);
+}
+
+.aod-itemdot{
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(37, 99, 235, .10);
+  border: 1px solid rgba(37, 99, 235, .18);
+  color: #1e40af;
+}

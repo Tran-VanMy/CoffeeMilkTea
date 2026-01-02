@@ -1,0 +1,110 @@
+@charset "UTF-8";
+
+/* /assets/css/order-detail-ui.css */
+
+.od-hero{
+  border-radius: 18px;
+  padding: 16px 16px;
+  background: radial-gradient(1100px 380px at 10% 0%, rgba(255,255,255,.22), transparent 60%),
+              linear-gradient(135deg, #0f172a, #2563eb);
+  color: #fff;
+  box-shadow: 0 10px 28px rgba(0,0,0,.12);
+}
+.od-hero__icon{
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.22);
+  font-size: 18px;
+}
+
+.od-breadcrumb{
+  --bs-breadcrumb-divider: "›";
+}
+
+.od-card{
+  border-radius: 18px;
+}
+
+.od-info{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+.od-info__row{
+  display: flex;
+  gap: 12px;
+}
+.od-info__label{
+  width: 120px;
+  color: rgba(0,0,0,.60);
+  font-weight: 700;
+}
+.od-info__value{
+  flex: 1;
+}
+
+.od-item__thumb{
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.04);
+  border: 1px solid rgba(0,0,0,.06);
+  flex: 0 0 auto;
+}
+
+.od-table thead th{
+  border-bottom: 1px solid rgba(0,0,0,.08);
+  color: rgba(0,0,0,.72);
+  font-weight: 800;
+}
+.od-table tbody tr{
+  border-top: 1px solid rgba(0,0,0,.06);
+}
+
+/* Status badge base */
+.od-status{
+  border: 1px solid rgba(0,0,0,.08);
+  padding: .45rem .6rem;
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+/* Màu theo status string (không đổi logic) */
+.status-CHO_XAC_NHAN{
+  background: rgba(245, 158, 11, .15);
+  color: #92400e;
+  border-color: rgba(245, 158, 11, .25);
+}
+.status-DANG_GIAO{
+  background: rgba(59, 130, 246, .14);
+  color: #1e40af;
+  border-color: rgba(59, 130, 246, .25);
+}
+.status-HOAN_THANH{
+  background: rgba(34, 197, 94, .14);
+  color: #166534;
+  border-color: rgba(34, 197, 94, .25);
+}
+.status-DA_HUY{
+  background: rgba(239, 68, 68, .12);
+  color: #991b1b;
+  border-color: rgba(239, 68, 68, .22);
+}
+
+/* Sticky summary on desktop */
+.od-sticky{
+  top: 14px;
+}
+@media (max-width: 991.98px){
+  .od-sticky{ position: static !important; }
+  .od-info__label{ width: 110px; }
+}

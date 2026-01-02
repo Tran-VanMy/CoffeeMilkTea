@@ -1,0 +1,92 @@
+@charset "UTF-8";
+
+/* /assets/css/header-pro.css */
+
+.topbar{
+  background: #0b1220;
+  color: rgba(255,255,255,.75);
+  font-size: .875rem;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.topbar__left i,
+.topbar__right i{
+  color: rgba(255,255,255,.85);
+}
+
+.nav-pro{
+  background: linear-gradient(135deg, #0f172a, #111827);
+  box-shadow: 0 10px 24px rgba(0,0,0,.15);
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  z-index: 99999999999;
+}
+
+.brand-badge{
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.18);
+}
+
+.navbar .nav-link{
+  border-radius: 12px;
+  padding: 8px 10px;
+  color: rgba(255,255,255,.85);
+}
+.navbar .nav-link:hover{
+  background: rgba(255,255,255,.08);
+  color: #fff;
+}
+.navbar .nav-link.active{
+  background: rgba(255,255,255,.12);
+  color: #fff;
+}
+
+.nav-search .input-group{
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.12);
+}
+.nav-search input::placeholder{
+  color: rgba(255,255,255,.55);
+}
+
+.user-avatar{
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.18);
+}
+
+.admin-link{
+  color: #ffd36a !important;
+}
+.admin-link:hover{
+  background: rgba(255, 211, 106, .14) !important;
+  color: #ffe4a3 !important;
+}
+
+.dropdown-menu{
+  border-radius: 14px;
+}
+.dropdown-item{
+  padding: 9px 12px;
+  border-radius: 10px;
+  margin: 2px 8px;
+}
+.dropdown-item:hover{
+  background: rgba(0,0,0,.04);
+}
+
+@media (max-width: 991.98px){
+  .nav-search{ width: 100%; }
+}

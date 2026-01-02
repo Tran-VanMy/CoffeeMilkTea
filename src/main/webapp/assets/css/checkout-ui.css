@@ -1,0 +1,60 @@
+@charset "UTF-8";
+
+/* /assets/css/checkout-ui.css */
+
+.ck-hero{
+  border-radius: 18px;
+  padding: 16px 16px;
+  background: radial-gradient(1100px 380px at 10% 0%, rgba(255,255,255,.22), transparent 60%),
+              linear-gradient(135deg, #0f172a, #2563eb);
+  color: #fff;
+  box-shadow: 0 10px 28px rgba(0,0,0,.12);
+}
+.ck-hero__icon{
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.22);
+  font-size: 18px;
+}
+
+.ck-card{
+  border-radius: 18px;
+}
+
+.ck-sticky{
+  top: 14px;
+}
+@media (max-width: 991.98px){
+  .ck-sticky{ position: static !important; }
+}
+
+.ck-list .list-group-item{
+  border-radius: 16px;
+  border: 1px solid rgba(0,0,0,.06);
+  margin-bottom: 10px;
+}
+
+.ck-item__thumb{
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.04);
+  border: 1px solid rgba(0,0,0,.06);
+  flex: 0 0 auto;
+}
+
+.ck-item__price{
+  min-width: 120px;
+}
+
+.ck-summary{
+  padding-top: 4px;
+}

@@ -1,0 +1,70 @@
+@charset "UTF-8";
+
+/* /assets/css/cart-ui.css */
+
+.cart-hero{
+  border-radius: 18px;
+  padding: 16px 16px;
+  background: radial-gradient(1100px 380px at 10% 0%, rgba(255,255,255,.22), transparent 60%),
+              linear-gradient(135deg, #0f172a, #2563eb);
+  color: #fff;
+  box-shadow: 0 10px 28px rgba(0,0,0,.12);
+}
+.cart-hero__icon{
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.22);
+  font-size: 18px;
+}
+
+.cart-empty{
+  border-radius: 18px;
+}
+.cart-empty__icon{
+  width: 72px;
+  height: 72px;
+  margin: 0 auto;
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(37, 99, 235, .10);
+  border: 1px solid rgba(37, 99, 235, .18);
+  font-size: 34px;
+}
+
+.cart-table thead th{
+  border-bottom: 1px solid rgba(0,0,0,.08);
+  color: rgba(0,0,0,.72);
+  font-weight: 700;
+}
+.cart-table tbody tr{
+  border-top: 1px solid rgba(0,0,0,.06);
+}
+.cart-item__thumb{
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.04);
+  border: 1px solid rgba(0,0,0,.06);
+  flex: 0 0 auto;
+}
+.qty-mini input{
+  width: 86px;
+  border-radius: 12px;
+}
+
+.cart-side{
+  top: 14px;
+}
+.card{
+  border-radius: 18px;
+}

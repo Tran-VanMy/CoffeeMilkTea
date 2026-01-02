@@ -1,0 +1,171 @@
+@charset "UTF-8";
+
+/* /assets/css/admin-orders-ui.css */
+
+.ao-hero{
+  border-radius: 18px;
+  padding: 16px 16px;
+  background: radial-gradient(1100px 380px at 10% 0%, rgba(255,255,255,.22), transparent 60%),
+              linear-gradient(135deg, #0f172a, #2563eb);
+  color: #fff;
+  box-shadow: 0 10px 28px rgba(0,0,0,.12);
+}
+.ao-hero__icon{
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.22);
+  font-size: 18px;
+}
+
+.ao-card{
+  border-radius: 18px;
+}
+
+/* Pills */
+.ao-pill{
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,.10);
+  background: #fff;
+  color: rgba(0,0,0,.70);
+}
+.ao-pill:hover{
+  background: rgba(0,0,0,.03);
+}
+.ao-pill.active{
+  background: rgba(37, 99, 235, .10);
+  border-color: rgba(37, 99, 235, .22);
+  color: #1e40af;
+}
+
+/* Table lines: thẳng & đều */
+.ao-table{
+  border-collapse: collapse !important;
+}
+.ao-table > :not(caption) > * > *{
+  border-bottom: 1px solid rgba(0,0,0,.08) !important;
+}
+.ao-table thead th{
+  color: rgba(0,0,0,.72);
+  font-weight: 800;
+  background: #fff;
+}
+.ao-table tbody tr:last-child > *{
+  border-bottom: 0 !important;
+}
+
+/* Avatar */
+.ao-avatar{
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.04);
+  border: 1px solid rgba(0,0,0,.06);
+  flex: 0 0 auto;
+}
+
+/* Status badges */
+.ao-status{
+  border-radius: 999px;
+  padding: .45rem .6rem;
+  font-weight: 800;
+  border: 1px solid rgba(0,0,0,.08);
+}
+.ao-status-CHO_XAC_NHAN{
+  background: rgba(245, 158, 11, .15);
+  color: #92400e;
+  border-color: rgba(245, 158, 11, .25);
+}
+.ao-status-DANG_PHA{
+  background: rgba(59, 130, 246, .14);
+  color: #1e40af;
+  border-color: rgba(59, 130, 246, .25);
+}
+.ao-status-DANG_GIAO{
+  background: rgba(99, 102, 241, .14);
+  color: #3730a3;
+  border-color: rgba(99, 102, 241, .25);
+}
+.ao-status-HOAN_TAT{
+  background: rgba(34, 197, 94, .14);
+  color: #166534;
+  border-color: rgba(34, 197, 94, .25);
+}
+.ao-status-HUY{
+  background: rgba(239, 68, 68, .12);
+  color: #991b1b;
+  border-color: rgba(239, 68, 68, .22);
+}
+
+/* Dot on filter pill */
+.ao-dot{
+  font-size: .55rem;
+  vertical-align: middle;
+}
+.ao-dot-CHO_XAC_NHAN{ color: #f59e0b; }
+.ao-dot-DANG_PHA{ color: #3b82f6; }
+.ao-dot-DANG_GIAO{ color: #6366f1; }
+.ao-dot-HOAN_TAT{ color: #22c55e; }
+.ao-dot-HUY{ color: #ef4444; }
+
+/* Actions */
+.ao-actions{
+  display: inline-flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ✅ FIX: select + button luôn cùng 1 hàng */
+.ao-actions__form{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  /* quan trọng: không cho xuống dòng */
+  flex-wrap: nowrap;
+
+  /* giữ cho form không bị co hẹp đến mức rớt dòng */
+  white-space: nowrap;
+}
+
+/* ✅ cho select có độ rộng hợp lý */
+.ao-actions__form .form-select{
+  width: 170px;        /* bạn có thể tăng lên 190 nếu muốn */
+  min-width: 170px;
+}
+
+/* ✅ nút không bị xuống dòng */
+.ao-actions__form .btn{
+  white-space: nowrap;
+}
+
+/* ✅ responsive: màn nhỏ thì giảm width select để vẫn 1 dòng */
+@media (max-width: 576px){
+  .ao-actions__form .form-select{
+    width: 140px;
+    min-width: 140px;
+  }
+}
+
+/* Empty */
+.ao-empty__icon{
+  width: 72px;
+  height: 72px;
+  margin: 0 auto;
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(37, 99, 235, .10);
+  border: 1px solid rgba(37, 99, 235, .18);
+  font-size: 34px;
+}
