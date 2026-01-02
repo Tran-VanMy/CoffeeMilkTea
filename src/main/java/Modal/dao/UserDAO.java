@@ -6,6 +6,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public class UserDAO {
 
@@ -70,6 +71,63 @@ public class UserDAO {
                     hash,
                     rs.getString("role")
             );
+        }
+    }
+    
+    // getById (dùng để chặn xóa ADMIN)
+    public User getById(long userId) throws Exception {
+        try (Connection cn = DB.getConnection()) {
+            String sql = "SELECT user_id, full_name, phone, email, username, password_hash, role, created_at FROM Users WHERE user_id=?";
+            PreparedStatement ps = cn.prepareStatement(sql);
+            ps.setLong(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) return null;
+
+            User u = new User(
+                    rs.getLong("user_id"),
+                    rs.getString("full_name"),
+                    rs.getString("phone"),
+                    rs.getString("email"),
+                    rs.getString("username"),
+                    rs.getString("password_hash"),
+                    rs.getString("role")
+            );
+            u.setCreatedAt(rs.getTimestamp("created_at"));
+            return u;
+        }
+    }
+
+    // admin list users
+    public ArrayList<User> getAllUsersForAdmin() throws Exception {
+        ArrayList<User> ds = new ArrayList<>();
+        try (Connection cn = DB.getConnection()) {
+            String sql = "SELECT user_id, full_name, phone, email, username, password_hash, role, created_at FROM Users ORDER BY user_id DESC";
+            PreparedStatement ps = cn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User u = new User(
+                        rs.getLong("user_id"),
+                        rs.getString("full_name"),
+                        rs.getString("phone"),
+                        rs.getString("email"),
+                        rs.getString("username"),
+                        rs.getString("password_hash"),
+                        rs.getString("role")
+                );
+                u.setCreatedAt(rs.getTimestamp("created_at"));
+                ds.add(u);
+            }
+        }
+        return ds;
+    }
+
+    // hard delete (chặn xóa ADMIN bằng điều kiện SQL)
+    public boolean deleteHardUser(long userId) throws Exception {
+        try (Connection cn = DB.getConnection()) {
+            String sql = "DELETE FROM Users WHERE user_id=? AND role <> 'ADMIN'";
+            PreparedStatement ps = cn.prepareStatement(sql);
+            ps.setLong(1, userId);
+            return ps.executeUpdate() > 0;
         }
     }
 }

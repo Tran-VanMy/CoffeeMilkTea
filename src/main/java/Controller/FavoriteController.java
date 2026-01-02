@@ -1,60 +1,130 @@
 package Controller;
 
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import Modal.bean.User;
+import Modal.bo.FavoriteBO;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
+import java.io.IOException;
 
-@WebServlet("/favorite")
+@WebServlet("/favorites")
 public class FavoriteController extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
-    @SuppressWarnings("unchecked")
-    private Set<Integer> getFavSet(HttpSession session) {
-        Set<Integer> fav = (Set<Integer>) session.getAttribute("FAV");
-        if (fav == null) {
-            fav = new HashSet<>();
-            session.setAttribute("FAV", fav);
+    private User ensureUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        User u = (User) request.getSession().getAttribute("USER");
+        if (u == null) {
+            String back = request.getParameter("redirect");
+            if (back == null || back.trim().isEmpty()) back = request.getHeader("Referer");
+
+            if (back != null && !back.trim().isEmpty()) {
+                response.sendRedirect(back);
+            } else {
+                response.sendRedirect(request.getContextPath() + "/login");
+            }
+            return null;
         }
-        return fav;
+        return u;
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getParameter("action");
-        if (action == null) action = "list";
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding("UTF-8");
 
-        HttpSession session = request.getSession();
-        Set<Integer> fav = getFavSet(session);
+            User u = ensureUser(request, response);
+            if (u == null) return;
 
-        if ("toggle".equalsIgnoreCase(action)) {
-            String idRaw = request.getParameter("id");
-            int id = 0;
-            try { id = Integer.parseInt(idRaw); } catch (Exception ignored) {}
+            FavoriteBO fbo = new FavoriteBO();
 
-            if (id > 0) {
-                if (fav.contains(id)) fav.remove(id);
-                else fav.add(id);
+            String action = request.getParameter("action");
+            if (action == null) action = "view";
+
+            if ("toggle".equalsIgnoreCase(action)) {
+                int productId = parseIntSafe(request.getParameter("productId"), 0);
+                if (productId > 0) {
+                    boolean added = fbo.toggle(u.getUserId(), productId);
+                    request.getSession().setAttribute("FAV_MSG",
+                            added ? "Đã thêm vào Yêu thích!" : "Đã bỏ khỏi Yêu thích!");
+                }
+
+                String target = request.getParameter("redirect");
+                if (target == null || target.trim().isEmpty()) {
+                    target = request.getHeader("Referer");
+                }
+
+                response.sendRedirect(safeRedirect(request, target));
+                return;
             }
 
-            String back = request.getParameter("back");
-            if (back == null || back.trim().isEmpty()) back = request.getContextPath() + "/home";
-            response.sendRedirect(back);
-            return;
-        }
+            if ("remove".equalsIgnoreCase(action)) {
+                int productId = parseIntSafe(request.getParameter("productId"), 0);
+                if (productId > 0) fbo.remove(u.getUserId(), productId);
+                response.sendRedirect(request.getContextPath() + "/favorites");
+                return;
+            }
 
-        // list
-        request.getRequestDispatcher("/WEB-INF/views/site/favorites.jsp").forward(request, response);
+            Object msg = request.getSession().getAttribute("FAV_MSG");
+            if (msg != null) {
+                request.setAttribute("msg", String.valueOf(msg));
+                request.getSession().removeAttribute("FAV_MSG");
+            }
+
+            request.setAttribute("favorites", fbo.getFavoriteProducts(u.getUserId()));
+            request.getRequestDispatcher("/WEB-INF/views/site/favorites.jsp").forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.getWriter().println("Favorites Error: " + e.getMessage());
+        }
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // cho tiện, POST cũng xử lý toggle
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         doGet(request, response);
+    }
+
+    private String safeRedirect(HttpServletRequest request, String target) {
+        String ctx = request.getContextPath();
+        if (ctx == null) ctx = "";
+
+        if (target == null || target.trim().isEmpty()) {
+            return ctx + "/home";
+        }
+
+        target = target.trim();
+
+        // ✅ chặn redirect tới WEB-INF (không bao giờ cho)
+        if (target.contains("/WEB-INF/") || target.contains("\\WEB-INF\\")) {
+            return ctx + "/home";
+        }
+
+        // absolute URL: vẫn cho (thường từ Referer)
+        if (target.startsWith("http://") || target.startsWith("https://")) {
+            // nhưng vẫn chặn nếu lỡ có WEB-INF
+            if (target.contains("/WEB-INF/") || target.contains("\\WEB-INF\\")) return ctx + "/home";
+            return target;
+        }
+
+        if (!target.startsWith("/")) target = "/" + target;
+
+        // nếu chưa có ctx thì prepend
+        if (!ctx.isEmpty() && !target.startsWith(ctx + "/") && !target.equals(ctx)) {
+            target = ctx + target;
+        }
+
+        return target;
+    }
+
+    private int parseIntSafe(String s, int def) {
+        try {
+            if (s == null) return def;
+            s = s.trim();
+            if (s.isEmpty()) return def;
+            return Integer.parseInt(s);
+        } catch (Exception e) {
+            return def;
+        }
     }
 }

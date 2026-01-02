@@ -18,6 +18,13 @@
   boolean actToppings   = path.contains("/admin/toppings");
   boolean actVouchers   = path.contains("/admin/vouchers");
   boolean actOrders     = path.contains("/admin/orders");
+
+  // NEW
+  boolean actStats      = path.contains("/admin/stats");
+  boolean actUsers      = path.contains("/admin/users");
+
+  // NEW: parent dropdown active nếu đang ở 1 trong các trang con
+  boolean actManagement = actCategories || actProducts || actToppings || actVouchers;
 %>
 
 <!DOCTYPE html>
@@ -44,8 +51,7 @@
   <link rel="stylesheet" href="<%=ctx%>/assets/css/admin-vouchers-ui.css">
   <link rel="stylesheet" href="<%=ctx%>/assets/css/admin-orders-ui.css">
   <link rel="stylesheet" href="<%=ctx%>/assets/css/admin-order-detail-ui.css">
-  <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/admin-footer-ui.css">
-  
+  <link rel="stylesheet" href="<%=ctx%>/assets/css/admin-footer-ui.css">
 </head>
 
 <body class="bg-light">
@@ -65,41 +71,69 @@
     <div class="collapse navbar-collapse" id="adminNav">
 
       <ul class="navbar-nav me-auto gap-lg-1 mt-3 mt-lg-0">
+
+        <!-- Dashboard -->
         <li class="nav-item">
           <a class="nav-link admin-link <%= actDashboard ? "active" : "" %>" href="<%=ctx%>/admin/dashboard">
             <i class="bi bi-speedometer2 me-2"></i>Dashboard
           </a>
         </li>
 
-        <li class="nav-item">
-          <a class="nav-link admin-link <%= actCategories ? "active" : "" %>" href="<%=ctx%>/admin/categories">
-            <i class="bi bi-tags me-2"></i>Categories
+        <!-- Management (dropdown) -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle admin-link <%= actManagement ? "active" : "" %>"
+             href="#"
+             role="button"
+             data-bs-toggle="dropdown"
+             aria-expanded="false">
+            <i class="bi bi-gear-wide-connected me-2"></i>Management
           </a>
+
+          <ul class="dropdown-menu shadow-sm">
+            <li>
+              <a class="dropdown-item <%= actCategories ? "active" : "" %>" href="<%=ctx%>/admin/categories">
+                <i class="bi bi-tags me-2"></i>Categories
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item <%= actProducts ? "active" : "" %>" href="<%=ctx%>/admin/products">
+                <i class="bi bi-cup-hot me-2"></i>Products
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item <%= actToppings ? "active" : "" %>" href="<%=ctx%>/admin/toppings">
+                <i class="bi bi-plus-circle-dotted me-2"></i>Toppings
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item <%= actVouchers ? "active" : "" %>" href="<%=ctx%>/admin/vouchers">
+                <i class="bi bi-ticket-perforated me-2"></i>Vouchers
+              </a>
+            </li>
+          </ul>
         </li>
 
-        <li class="nav-item">
-          <a class="nav-link admin-link <%= actProducts ? "active" : "" %>" href="<%=ctx%>/admin/products">
-            <i class="bi bi-cup-hot me-2"></i>Products
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link admin-link <%= actToppings ? "active" : "" %>" href="<%=ctx%>/admin/toppings">
-            <i class="bi bi-plus-circle-dotted me-2"></i>Toppings
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link admin-link <%= actVouchers ? "active" : "" %>" href="<%=ctx%>/admin/vouchers">
-            <i class="bi bi-ticket-perforated me-2"></i>Vouchers
-          </a>
-        </li>
-
+        <!-- Orders -->
         <li class="nav-item">
           <a class="nav-link admin-link <%= actOrders ? "active" : "" %>" href="<%=ctx%>/admin/orders">
             <i class="bi bi-receipt-cutoff me-2"></i>Orders
           </a>
         </li>
+
+        <!-- Users -->
+        <li class="nav-item">
+          <a class="nav-link admin-link <%= actUsers ? "active" : "" %>" href="<%=ctx%>/admin/users">
+            <i class="bi bi-people me-2"></i>Users
+          </a>
+        </li>
+
+        <!-- Analytics (Stats) -->
+        <li class="nav-item">
+          <a class="nav-link admin-link <%= actStats ? "active" : "" %>" href="<%=ctx%>/admin/stats">
+            <i class="bi bi-graph-up-arrow me-2"></i>Analytics
+          </a>
+        </li>
+
       </ul>
 
       <div class="d-flex align-items-center gap-2 ms-lg-2 pb-3 pb-lg-0">
@@ -111,17 +145,17 @@
 
           <ul class="dropdown-menu dropdown-menu-end shadow-sm">
             <li class="dropdown-header text-muted small">
-              <i class="bi bi-shield-check me-1"></i> Quản trị viên
+              <i class="bi bi-shield-check me-1"></i> Administrator
             </li>
             <li><hr class="dropdown-divider"></li>
             <li>
               <a class="dropdown-item" href="<%=ctx%>/admin/dashboard">
-                <i class="bi bi-house-door me-2"></i>Về Dashboard
+                <i class="bi bi-house-door me-2"></i>Back to Dashboard
               </a>
             </li>
             <li>
               <a class="dropdown-item" href="<%=ctx%>/home">
-                <i class="bi bi-box-arrow-up-right me-2"></i>Mở trang khách
+                <i class="bi bi-box-arrow-up-right me-2"></i>Open customer site
               </a>
             </li>
           </ul>

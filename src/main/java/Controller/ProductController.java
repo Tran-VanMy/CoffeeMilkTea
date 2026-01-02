@@ -1,6 +1,8 @@
 package Controller;
 
+import Modal.bean.User;
 import Modal.bo.CategoryBO;
+import Modal.bo.FavoriteBO;
 import Modal.bo.ProductBO;
 import Modal.bo.ToppingBO;
 
@@ -21,11 +23,19 @@ public class ProductController extends HttpServlet {
             ProductBO pbo = new ProductBO();
             ToppingBO tbo = new ToppingBO();
 
-            // ✅ FIX: Trang customer chỉ hiển thị category active=1
             request.setAttribute("categories", cbo.getAllActive());
-
-            // topping chỉ lấy active
             request.setAttribute("toppings", tbo.getActiveAll());
+
+            String sort = request.getParameter("sort");
+            if (sort == null) sort = "";
+            request.setAttribute("sort", sort);
+
+            // ✅ favorites state for heart icon
+            User u = (User) request.getSession().getAttribute("USER");
+            if (u != null) {
+                FavoriteBO fbo = new FavoriteBO();
+                request.setAttribute("favoriteIds", fbo.getProductIdSet(u.getUserId()));
+            }
 
             String idStr = request.getParameter("id");
             if (idStr != null && !idStr.trim().isEmpty()) {
@@ -35,14 +45,13 @@ public class ProductController extends HttpServlet {
                 return;
             }
 
-            // list theo category
             String cid = request.getParameter("cid");
             if (cid != null && !cid.trim().isEmpty()) {
                 int categoryId = Integer.parseInt(cid);
-                request.setAttribute("products", pbo.getActiveByCategory(categoryId));
+                request.setAttribute("products", pbo.getActiveByCategorySorted(categoryId, sort));
                 request.setAttribute("activeCategoryId", categoryId);
             } else {
-                request.setAttribute("products", pbo.getActiveAll());
+                request.setAttribute("products", pbo.getActiveAllSorted(sort));
             }
 
             request.getRequestDispatcher("/WEB-INF/views/site/home.jsp").forward(request, response);

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.net.URLEncoder" %>
 <%@ page import="Modal.bean.Category" %>
 <%@ page import="Modal.bean.Product" %>
 
@@ -12,12 +13,28 @@
   List<Product> products = (List<Product>) request.getAttribute("products");
   Integer activeCategoryId = (Integer) request.getAttribute("activeCategoryId");
   String q = (String) request.getAttribute("q");
+  String sort = (String) request.getAttribute("sort");
+
+  Set<Integer> favoriteIds = (Set<Integer>) request.getAttribute("favoriteIds");
+  if (favoriteIds == null) favoriteIds = new HashSet<>();
 
   boolean hasQuery = (q != null && !q.trim().isEmpty());
   String ctx = request.getContextPath();
+
+  if (sort == null || sort.trim().isEmpty()) sort = "";
+
+  // build base url cho sort
+  String baseUrl;
+  if (hasQuery) {
+      baseUrl = ctx + "/home?q=" + URLEncoder.encode(q.trim(), "UTF-8");
+  } else if (activeCategoryId != null) {
+      baseUrl = ctx + "/product?cid=" + activeCategoryId;
+  } else {
+      baseUrl = ctx + "/home";
+  }
+  String sortParamJoin = baseUrl.contains("?") ? "&" : "?";
 %>
 
-<!-- Page Header -->
 <section class="menu-hero mb-3">
   <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
     <div>
@@ -38,9 +55,6 @@
     </div>
 
     <div class="d-flex align-items-center gap-2">
-      <a class="btn btn-light btn-sm fw-semibold" href="<%=ctx%>/cart">
-        <i class="bi bi-bag-check me-1"></i> Giỏ hàng
-      </a>
       <a class="btn btn-outline-light btn-sm fw-semibold" href="<%=ctx%>/home">
         <i class="bi bi-arrow-clockwise me-1"></i> Làm mới
       </a>
@@ -49,7 +63,6 @@
 </section>
 
 <div class="row g-3">
-  <!-- Sidebar -->
   <div class="col-lg-3">
     <div class="card card-soft shadow-sm sticky-lg-top sidebar-card">
       <div class="card-header bg-white d-flex align-items-center justify-content-between">
@@ -62,8 +75,8 @@
       </div>
 
       <div class="card-body pt-3">
-        <!-- Search (UI only - nếu bạn đã có endpoint search thì đổi action phù hợp) -->
         <form class="mb-3" action="<%=ctx%>/home" method="get">
+          <input type="hidden" name="sort" value="<%=sort%>"/>
           <div class="input-group">
             <span class="input-group-text bg-white">
               <i class="bi bi-search"></i>
@@ -80,7 +93,7 @@
         <div class="list-group list-group-flush category-list">
           <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between
                     <%= (activeCategoryId==null && !hasQuery) ? "active" : "" %>"
-             href="<%=ctx%>/home">
+             href="<%=ctx%>/home<%= (sort!=null && !sort.isEmpty()) ? ("?sort=" + sort) : "" %>">
             <span class="d-flex align-items-center gap-2">
               <i class="bi bi-app-indicator"></i> Tất cả
             </span>
@@ -91,7 +104,7 @@
                for (Category c : categories) { %>
             <a class="list-group-item list-group-item-action d-flex align-items-center justify-content-between
                       <%= (activeCategoryId!=null && activeCategoryId==c.getCategoryId()) ? "active" : "" %>"
-               href="<%=ctx%>/product?cid=<%=c.getCategoryId()%>">
+               href="<%=ctx%>/product?cid=<%=c.getCategoryId()%><%= (sort!=null && !sort.isEmpty()) ? ("&sort=" + sort) : "" %>">
               <span class="d-flex align-items-center gap-2">
                 <i class="bi bi-tag-fill"></i> <%=c.getName()%>
               </span>
@@ -112,7 +125,6 @@
     </div>
   </div>
 
-  <!-- Main content -->
   <div class="col-lg-9">
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-2">
       <div class="d-flex align-items-center gap-2">
@@ -135,17 +147,35 @@
       </div>
 
       <div class="d-flex align-items-center gap-2">
-        <!-- Sort UI (chỉ UI; nếu bạn có sort backend thì bổ sung param + xử lý controller) -->
         <div class="dropdown">
           <button class="btn btn-outline-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown" type="button">
             <i class="bi bi-sort-down me-1"></i> Sắp xếp
           </button>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><span class="dropdown-item-text small text-muted">Chức năng UI (tùy bạn nối backend)</span></li>
-            <li><a class="dropdown-item" href="#"><i class="bi bi-stars me-2"></i>Phổ biến</a></li>
-            <li><a class="dropdown-item" href="#"><i class="bi bi-cash-stack me-2"></i>Giá tăng dần</a></li>
-            <li><a class="dropdown-item" href="#"><i class="bi bi-cash me-2"></i>Giá giảm dần</a></li>
-            <li><a class="dropdown-item" href="#"><i class="bi bi-clock-history me-2"></i>Mới nhất</a></li>
+          <ul class="dropdown-menu dropdown-menu-end w-200">
+            <li>
+              <a class="dropdown-item <%= "popular".equalsIgnoreCase(sort) ? "active" : "" %>"
+                 href="<%=baseUrl%><%=sortParamJoin%>sort=popular">
+                <i class="bi bi-stars me-2"></i>Phổ biến
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item <%= "priceAsc".equalsIgnoreCase(sort) ? "active" : "" %>"
+                 href="<%=baseUrl%><%=sortParamJoin%>sort=priceAsc">
+                <i class="bi bi-cash-stack me-2"></i>Giá tăng dần
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item <%= "priceDesc".equalsIgnoreCase(sort) ? "active" : "" %>"
+                 href="<%=baseUrl%><%=sortParamJoin%>sort=priceDesc">
+                <i class="bi bi-cash me-2"></i>Giá giảm dần
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item <%= "newest".equalsIgnoreCase(sort) ? "active" : "" %>"
+                 href="<%=baseUrl%><%=sortParamJoin%>sort=newest">
+                <i class="bi bi-clock-history me-2"></i>Mới nhất
+              </a>
+            </li>
           </ul>
         </div>
 
@@ -170,10 +200,21 @@
     <% } else { %>
 
       <div class="row g-3">
-        <% for (Product p : products) { 
+        <% for (Product p : products) {
              String img = (p.getImageUrl()==null || p.getImageUrl().trim().isEmpty())
                           ? "https://images.unsplash.com/photo-1521302080391-cb041f3f58ff?q=80&w=1200&auto=format&fit=crop"
                           : p.getImageUrl();
+
+             boolean isFav = favoriteIds.contains(p.getProductId());
+
+             // ✅ FIX CHÍNH: redirect luôn về endpoint controller (/home hoặc /product), không bao giờ về /WEB-INF
+             String redirectTarget = baseUrl;
+             if (sort != null && !sort.trim().isEmpty()) {
+                 redirectTarget = redirectTarget + (redirectTarget.contains("?") ? "&" : "?") + "sort=" + URLEncoder.encode(sort, "UTF-8");
+             }
+
+             String favUrl = ctx + "/favorites?action=toggle&productId=" + p.getProductId()
+                     + "&redirect=" + URLEncoder.encode(redirectTarget, "UTF-8");
         %>
           <div class="col-12 col-md-6 col-xl-4">
             <div class="card product-card h-100 shadow-sm">
@@ -198,10 +239,12 @@
                     </div>
                   </div>
 
-                  <button class="btn btn-outline-secondary btn-sm product-card__fav" type="button"
-                          data-bs-toggle="tooltip" data-bs-title="Yêu thích (UI)">
-                    <i class="bi bi-heart"></i>
-                  </button>
+                  <a class="btn btn-outline-secondary btn-sm product-card__fav"
+                     href="<%=favUrl%>"
+                     data-bs-toggle="tooltip"
+                     data-bs-title="<%= isFav ? "Bỏ yêu thích" : "Thêm yêu thích" %>">
+                    <i class="bi <%= isFav ? "bi-heart-fill text-danger" : "bi-heart" %>"></i>
+                  </a>
                 </div>
 
                 <div class="text-muted small mt-2 product-card__desc">
@@ -239,10 +282,7 @@
         <% } %>
       </div>
 
-    
-
       <script>
-        // Enable bootstrap tooltips (nếu header đã load bootstrap bundle)
         document.addEventListener("DOMContentLoaded", function () {
           var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
           tooltipTriggerList.map(function (el) { return new bootstrap.Tooltip(el); });

@@ -7,6 +7,7 @@ import Modal.bean.OrderItem;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class OrderDAO {
 
@@ -198,6 +199,51 @@ public class OrderDAO {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 out.add(new String[]{ rs.getString("product_name"), String.valueOf(rs.getLong("qty")) });
+            }
+        }
+        return out;
+    }
+    
+    // doanh thu N ngày gần nhất (dùng cho line chart)
+    // return list: [yyyy-MM-dd, revenue]
+    public ArrayList<String[]> revenueLastNDays(int days) throws Exception {
+        if (days <= 0) days = 7;
+
+        ArrayList<String[]> out = new ArrayList<>();
+        try (Connection cn = DB.getConnection()) {
+            String sql =
+                "SELECT CONVERT(varchar(10), d, 23) AS day, ISNULL(SUM(o.total),0) AS rev " +
+                "FROM ( " +
+                "   SELECT CAST(DATEADD(day, -v.number, CAST(GETDATE() AS date)) AS date) AS d " +
+                "   FROM master..spt_values v " +
+                "   WHERE v.type='P' AND v.number BETWEEN 0 AND ? " +
+                ") t " +
+                "LEFT JOIN Orders o ON CAST(o.created_at AS date)=t.d AND o.status <> 'HUY' " +
+                "GROUP BY t.d " +
+                "ORDER BY t.d";
+            PreparedStatement ps = cn.prepareStatement(sql);
+            ps.setInt(1, days - 1);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                out.add(new String[]{ rs.getString("day"), String.valueOf(rs.getLong("rev")) });
+            }
+        }
+        return out;
+    }
+
+    // đếm số đơn theo status (dùng cho doughnut chart)
+    public LinkedHashMap<String, Integer> countOrdersByStatus() throws Exception {
+        LinkedHashMap<String, Integer> out = new LinkedHashMap<>();
+        try (Connection cn = DB.getConnection()) {
+            String sql =
+                "SELECT status, COUNT(*) AS c " +
+                "FROM Orders " +
+                "GROUP BY status " +
+                "ORDER BY status";
+            PreparedStatement ps = cn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                out.put(rs.getString("status"), rs.getInt("c"));
             }
         }
         return out;

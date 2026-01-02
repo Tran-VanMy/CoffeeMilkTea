@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.net.URLEncoder" %>
 <%@ page import="Modal.bean.Product" %>
 <%@ page import="Modal.bean.Topping" %>
 
@@ -10,6 +11,15 @@
   Product p = (Product) request.getAttribute("product");
   List<Topping> toppings = (List<Topping>) request.getAttribute("toppings");
   NumberFormat nf = NumberFormat.getInstance(new Locale("vi","VN"));
+
+  // sort (để giữ sort nếu bạn truyền từ trang list)
+  String sort = (String) request.getAttribute("sort");
+  if (sort == null) sort = "";
+  String ctx = request.getContextPath();
+
+  // favorites set từ controller
+  Set<Integer> favoriteIds = (Set<Integer>) request.getAttribute("favoriteIds");
+  if (favoriteIds == null) favoriteIds = new HashSet<>();
 %>
 
 <% if (p == null) { %>
@@ -24,7 +34,7 @@
         </div>
       </div>
 
-      <a class="btn btn-dark mt-3" href="<%=request.getContextPath()%>/home">
+      <a class="btn btn-dark mt-3" href="<%=ctx%>/home">
         <i class="bi bi-arrow-left me-1"></i> Quay lại menu
       </a>
     </div>
@@ -32,16 +42,30 @@
 
 <% } else { %>
 
+  <%
+    boolean isFav = favoriteIds.contains(p.getProductId());
+
+    // ✅ redirect luôn về endpoint controller (/product?id=...), KHÔNG BAO GIỜ về /WEB-INF
+    String redirectTarget = ctx + "/product?id=" + p.getProductId();
+    if (sort != null && !sort.trim().isEmpty()) {
+        redirectTarget = redirectTarget + "&sort=" + URLEncoder.encode(sort.trim(), "UTF-8");
+    }
+
+    // ✅ URL toggle favorite giống home.jsp
+    String favUrl = ctx + "/favorites?action=toggle&productId=" + p.getProductId()
+            + "&redirect=" + URLEncoder.encode(redirectTarget, "UTF-8");
+  %>
+
   <!-- Breadcrumb (UI only) -->
   <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb product-breadcrumb">
       <li class="breadcrumb-item">
-        <a class="text-decoration-none" href="<%=request.getContextPath()%>/home">
+        <a class="text-decoration-none" href="<%=ctx%>/home">
           <i class="bi bi-house-door me-1"></i>Trang chủ
         </a>
       </li>
       <li class="breadcrumb-item">
-        <a class="text-decoration-none" href="<%=request.getContextPath()%>/home">
+        <a class="text-decoration-none" href="<%=ctx%>/home">
           <i class="bi bi-cup-straw me-1"></i>Menu
         </a>
       </li>
@@ -76,10 +100,15 @@
                 <i class="bi bi-clock me-1"></i> 5–10 phút
               </div>
             </div>
-            <button class="btn btn-outline-secondary btn-sm rounded-3"
-                    type="button" data-bs-toggle="tooltip" data-bs-title="Yêu thích (UI)">
-              <i class="bi bi-heart"></i>
-            </button>
+
+            <!-- ✅ FAVORITES TOGGLE (REAL LOGIC) -->
+            <a class="btn btn-outline-secondary btn-sm rounded-3"
+               href="<%=favUrl%>"
+               data-bs-toggle="tooltip"
+               data-bs-title="<%= isFav ? "Bỏ yêu thích" : "Thêm yêu thích" %>">
+              <i class="bi <%= isFav ? "bi-heart-fill text-danger" : "bi-heart" %>"></i>
+            </a>
+
           </div>
 
           <div class="text-muted mt-2 product-desc">
@@ -138,7 +167,7 @@
           <% } %>
 
           <!-- LOGIC giữ nguyên: action, hidden inputs, name fields -->
-          <form action="<%=request.getContextPath()%>/cart" method="post">
+          <form action="<%=ctx%>/cart" method="post">
             <input type="hidden" name="action" value="add">
             <input type="hidden" name="productId" value="<%=p.getProductId()%>">
 
@@ -192,7 +221,6 @@
                   for (Topping t : toppings) {
               %>
                 <div class="col-md-6">
-                  <!-- UI cải tiến: chip-style, logic giữ nguyên name/value/id -->
                   <div class="topping-item">
                     <input class="btn-check" type="checkbox"
                            name="toppingId" value="<%=t.getToppingId()%>" id="tp<%=t.getToppingId()%>">
@@ -220,7 +248,6 @@
                 Số lượng
               </label>
 
-              <!-- UI stepper (vẫn submit input qty như cũ) -->
               <div class="qty-control">
                 <button class="btn btn-outline-secondary" type="button" id="qtyMinus" aria-label="Minus">
                   <i class="bi bi-dash-lg"></i>
@@ -238,23 +265,22 @@
               <button class="btn btn-primary px-4">
                 <i class="bi bi-cart-plus me-1"></i> Thêm vào giỏ
               </button>
-              <a class="btn btn-outline-dark" href="<%=request.getContextPath()%>/home">
+              <a class="btn btn-outline-dark" href="<%=ctx%>/home">
                 <i class="bi bi-arrow-left me-1"></i> Quay lại
               </a>
-
             </div>
           </form>
         </div>
       </div>
 
       <script>
-        // Tooltip (UI only)
+        // Tooltip
         document.addEventListener("DOMContentLoaded", function () {
           var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
           tooltipTriggerList.map(function (el) { return new bootstrap.Tooltip(el); });
         });
 
-        // Stepper qty (UI only - không đổi logic submit)
+        // Stepper qty
         (function(){
           const qtyInput = document.getElementById('qtyInput');
           const minus = document.getElementById('qtyMinus');
@@ -279,7 +305,7 @@
           }
         })();
 
-        // Clear toppings (UI only - không đổi logic submit)
+        // Clear toppings
         (function(){
           const btn = document.getElementById('clearToppings');
           if(!btn) return;
@@ -288,6 +314,7 @@
           });
         })();
       </script>
+
     </div>
   </div>
 

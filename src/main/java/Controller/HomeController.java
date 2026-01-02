@@ -1,6 +1,8 @@
 package Controller;
 
+import Modal.bean.User;
 import Modal.bo.CategoryBO;
+import Modal.bo.FavoriteBO;
 import Modal.bo.ProductBO;
 
 import javax.servlet.annotation.WebServlet;
@@ -19,15 +21,25 @@ public class HomeController extends HttpServlet {
             CategoryBO cbo = new CategoryBO();
             ProductBO pbo = new ProductBO();
 
-            // ✅ FIX: Trang customer chỉ lấy category active=1
             request.setAttribute("categories", cbo.getAllActive());
+
+            String sort = request.getParameter("sort");
+            if (sort == null) sort = "";
+            request.setAttribute("sort", sort);
 
             String q = request.getParameter("q");
             if (q != null && !q.trim().isEmpty()) {
-                request.setAttribute("products", pbo.searchActive(q));
+                request.setAttribute("products", pbo.searchActiveSorted(q, sort));
                 request.setAttribute("q", q.trim());
             } else {
-                request.setAttribute("products", pbo.getActiveAll());
+                request.setAttribute("products", pbo.getActiveAllSorted(sort));
+            }
+
+            // ✅ favorites state for heart icon
+            User u = (User) request.getSession().getAttribute("USER");
+            if (u != null) {
+                FavoriteBO fbo = new FavoriteBO();
+                request.setAttribute("favoriteIds", fbo.getProductIdSet(u.getUserId()));
             }
 
             request.getRequestDispatcher("/WEB-INF/views/site/home.jsp").forward(request, response);

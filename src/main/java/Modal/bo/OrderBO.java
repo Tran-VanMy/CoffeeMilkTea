@@ -6,6 +6,7 @@ import Modal.bean.Order;
 import Modal.dao.OrderDAO;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class OrderBO {
     private final OrderDAO dao = new OrderDAO();
@@ -42,5 +43,14 @@ public class OrderBO {
     }
     public ArrayList<String[]> topProducts(int limit) throws Exception {
     	return dao.topProducts(limit);
+    }
+    // doanh thu N ngày gần nhất (để vẽ line chart)
+    public ArrayList<String[]> revenueLastNDays(int days) throws Exception {
+        return dao.revenueLastNDays(days);
+    }
+
+    // đếm số đơn theo status (để vẽ doughnut)
+    public LinkedHashMap<String, Integer> countOrdersByStatus() throws Exception {
+        return dao.countOrdersByStatus();
     }
 }

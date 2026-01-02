@@ -32,6 +32,19 @@ public class ProductBO {
     public ArrayList<Product> searchActive(String keyword) throws Exception {
         return dao.searchActive(keyword);
     }
+    
+    // ✅ NEW: sort logic
+    public ArrayList<Product> getActiveAllSorted(String sort) throws Exception {
+        return dao.getActiveAllSorted(sort);
+    }
+
+    public ArrayList<Product> getActiveByCategorySorted(int categoryId, String sort) throws Exception {
+        return dao.getActiveByCategorySorted(categoryId, sort);
+    }
+
+    public ArrayList<Product> searchActiveSorted(String keyword, String sort) throws Exception {
+        return dao.searchActiveSorted(keyword, sort);
+    }
 
     public String create(int categoryId, String name, String desc, long basePrice, String imageUrl, boolean active) throws Exception {
         if (categoryId <= 0) return "Chưa chọn danh mục.";
