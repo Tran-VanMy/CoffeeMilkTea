@@ -91,8 +91,17 @@
             <textarea class="form-control" name="note" rows="2" placeholder="VD: Giao giờ hành chính, gọi trước khi đến..."></textarea>
           </div>
 
-          <button class="btn btn-primary w-100">
+          <button class="btn btn-primary w-100 mb-3">
             <i class="bi bi-bag-check me-1"></i> Xác nhận đặt hàng
+          </button>
+          
+          <!-- ✅ Nút mới: Thanh toán thật VietQR (không đổi logic /checkout; dùng luồng mới) -->
+          <button
+            type="submit"
+            class="btn btn-success w-100"
+            formaction="<%=request.getContextPath()%>/vietqr/init"
+            formmethod="post">
+            <i class="bi bi-qr-code-scan me-1"></i> Thanh toán thật (VietQR)
           </button>
 
           <div class="small text-muted mt-3 d-flex align-items-start gap-2">
